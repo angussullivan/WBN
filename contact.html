@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | Well Beyond Now</title>
+<meta name="description" content="Book a free discovery call or send a message to Well Beyond Now to discuss doula, naturopathic and postpartum support.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand">Well <span>Beyond</span> Now</a>
+    <button class="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">1:1 Support</a></li>
+      <li><a href="programs.html">Programs &amp; E-books</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><a href="contact.html" class="btn btn-primary">Book a Call</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <section class="page-banner">
+    <div class="container">
+      <span class="eyebrow">Get In Touch</span>
+      <h1>Let's talk about how I can support you</h1>
+      <p class="lede">Whether you have a question, want to book a discovery call, or are ready to get started — I'd love to hear from you.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="split" style="align-items:flex-start;">
+
+        <div class="contact-card">
+          <h2>Send a Message</h2>
+          <form class="contact-form">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="interest">I'm Interested In</label>
+              <select id="interest" name="interest">
+                <option>1:1 Doula &amp; Coaching Support</option>
+                <option>Programs &amp; E-books</option>
+                <option>General Enquiry</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Your Message</label>
+              <textarea id="message" name="message" required placeholder="Tell me a little about where you are and how I can help..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+            <p class="form-note" style="display:none;margin-top:16px;color:var(--color-rose-dark);font-weight:600;"></p>
+          </form>
+        </div>
+
+        <div>
+          <h2>Other Ways to Connect</h2>
+          <p>Prefer to book straight in? Schedule a free 20-minute discovery call so we can talk through your needs and answer any questions.</p>
+
+          <div class="card mt-lg">
+            <h3>Email</h3>
+            <p><a href="mailto:hello@wellbeyondnow.com">hello@wellbeyondnow.com</a></p>
+          </div>
+
+          <div class="card mt-lg">
+            <h3>Discovery Calls</h3>
+            <p>Free 20-minute calls are available Monday–Thursday. Send a message and I'll share available times.</p>
+          </div>
+
+          <div class="card mt-lg">
+            <h3>Location</h3>
+            <p>In-person support available locally; 1:1 coaching and all digital programs available worldwide via video call.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Well Beyond Now</h4>
+        <p>Doula &amp; naturopathic support for women — before, during and after birth. In-person and digital care to help you feel informed, held and well beyond now.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="Facebook">FB</a>
+          <a href="#" aria-label="Pinterest">P</a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">1:1 Support</a></li>
+          <li><a href="programs.html">Programs &amp; E-books</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get in Touch</h4>
+        <ul>
+          <li><a href="mailto:hello@wellbeyondnow.com">hello@wellbeyondnow.com</a></li>
+          <li>Servicing local &amp; virtual clients</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span id="year"></span> Well Beyond Now. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
