@@ -52,7 +52,9 @@
             <li>Natural comfort measures for labour</li>
             <li>Birth plan template</li>
           </ul>
-          <a href="#" data-stripe-link="birthReadyEbook" class="btn btn-outline btn-block">Get the E-book</a>
+          <div data-buy-button="birthReadyEbook">
+            <a href="#" data-stripe-link="birthReadyEbook" class="btn btn-outline btn-block">Get the E-book</a>
+          </div>
         </div>
 
         <div class="package-card featured">
@@ -65,7 +67,9 @@
             <li>Nutrition &amp; recovery guides</li>
             <li>Private community access</li>
           </ul>
-          <a href="#" data-stripe-link="fourthTrimesterReset" class="btn btn-primary btn-block">Join the Program</a>
+          <div data-buy-button="fourthTrimesterReset">
+            <a href="#" data-stripe-link="fourthTrimesterReset" class="btn btn-primary btn-block">Join the Program</a>
+          </div>
         </div>
 
         <div class="package-card">
@@ -77,7 +81,9 @@
             <li>Cycle tracking workbook</li>
             <li>Lifestyle &amp; supplement guidance</li>
           </ul>
-          <a href="#" data-stripe-link="cycleFertilityBundle" class="btn btn-outline btn-block">Get the Bundle</a>
+          <div data-buy-button="cycleFertilityBundle">
+            <a href="#" data-stripe-link="cycleFertilityBundle" class="btn btn-outline btn-block">Get the Bundle</a>
+          </div>
         </div>
 
       </div>
@@ -154,7 +160,8 @@
 </footer>
 
 <script src="js/main.js"></script>
-<script src="js/stripe-links.js"></script>
+<script src="js/stripe-config.js"></script>
+<script src="js/stripe-buy-buttons.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
