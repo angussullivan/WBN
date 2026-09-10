@@ -24,7 +24,7 @@
       <li><a href="services.html">1:1 Support</a></li>
       <li><a href="programs.html">Programs &amp; E-books</a></li>
       <li><a href="contact.html" class="active">Contact</a></li>
-      <li><a href="contact.html" class="btn btn-primary">Book a Call</a></li>
+      <li><a href="contact.html" class="btn btn-primary" data-cal-event="discoveryCall">Book a Call</a></li>
     </ul>
   </nav>
 </header>
@@ -39,11 +39,36 @@
     </div>
   </section>
 
+  <section class="section-alt">
+    <div class="container text-center">
+      <span class="eyebrow">Book Directly</span>
+      <h2>Find a time that works for you</h2>
+      <p class="lede">Pick an appointment type below to see live availability and book straight into the calendar.</p>
+      <div class="grid grid-3 mt-lg">
+        <div class="card">
+          <h3>Free Discovery Call</h3>
+          <p>20 minutes, video call. A relaxed chat about where you're at and how I can help.</p>
+          <a href="contact.html#message-form" class="btn btn-outline btn-block" data-cal-event="discoveryCall">Book Now</a>
+        </div>
+        <div class="card">
+          <h3>1:1 Coaching Session</h3>
+          <p>90 minutes. A single consultation — naturopathic, birth or postpartum coaching, tailored to you.</p>
+          <a href="contact.html#message-form" class="btn btn-outline btn-block" data-cal-event="singleSession">Book Now</a>
+        </div>
+        <div class="card">
+          <h3>Postpartum Home Visit</h3>
+          <p>In-home recovery support and check-in for you and your baby.</p>
+          <a href="contact.html#message-form" class="btn btn-outline btn-block" data-cal-event="postpartumVisit">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section>
     <div class="container">
       <div class="split" style="align-items:flex-start;">
 
-        <div class="contact-card">
+        <div class="contact-card" id="message-form">
           <h2>Send a Message</h2>
           <form class="contact-form">
             <div class="form-group">
@@ -73,16 +98,11 @@
 
         <div>
           <h2>Other Ways to Connect</h2>
-          <p>Prefer to book straight in? Schedule a free 20-minute discovery call so we can talk through your needs and answer any questions.</p>
+          <p>Prefer to write instead? Send a message and I'll get back to you directly.</p>
 
           <div class="card mt-lg">
             <h3>Email</h3>
             <p><a href="mailto:hello@wellbeyondnow.com">hello@wellbeyondnow.com</a></p>
-          </div>
-
-          <div class="card mt-lg">
-            <h3>Discovery Calls</h3>
-            <p>Free 20-minute calls are available Monday–Thursday. Send a message and I'll share available times.</p>
           </div>
 
           <div class="card mt-lg">
@@ -133,6 +153,8 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/cal-config.js"></script>
+<script src="js/cal-embed.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

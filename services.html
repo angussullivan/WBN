@@ -24,7 +24,7 @@
       <li><a href="services.html" class="active">1:1 Support</a></li>
       <li><a href="programs.html">Programs &amp; E-books</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a href="contact.html" class="btn btn-primary">Book a Call</a></li>
+      <li><a href="contact.html" class="btn btn-primary" data-cal-event="discoveryCall">Book a Call</a></li>
     </ul>
   </nav>
 </header>
@@ -92,7 +92,7 @@
             <li>Personalised recommendations</li>
             <li>Follow-up summary &amp; resources</li>
           </ul>
-          <a href="contact.html" class="btn btn-outline btn-block">Enquire Now</a>
+          <a href="contact.html" class="btn btn-outline btn-block" data-cal-event="singleSession">Book This Session</a>
         </div>
 
         <div class="package-card featured">
@@ -137,7 +137,7 @@
     <div class="container text-center">
       <h2>Let's find the right support for you</h2>
       <p class="lede">Book a free discovery call to talk through your needs and find the best fit.</p>
-      <a href="contact.html" class="btn btn-primary">Book Your Free Call</a>
+      <a href="contact.html" class="btn btn-primary" data-cal-event="discoveryCall">Book Your Free Call</a>
     </div>
   </section>
 
@@ -179,6 +179,8 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/cal-config.js"></script>
+<script src="js/cal-embed.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
