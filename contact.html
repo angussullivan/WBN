@@ -71,6 +71,7 @@
         <div class="contact-card" id="message-form">
           <h2>Send a Message</h2>
           <form class="contact-form">
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
             <div class="form-group">
               <label for="name">Full Name</label>
               <input type="text" id="name" name="name" required>
@@ -155,6 +156,8 @@
 <script src="js/main.js"></script>
 <script src="js/cal-config.js"></script>
 <script src="js/cal-embed.js"></script>
+<script src="js/contact-config.js"></script>
+<script src="js/contact-form.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

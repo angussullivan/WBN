@@ -13,17 +13,4 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-
-  var form = document.querySelector('.contact-form');
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var note = form.querySelector('.form-note');
-      if (note) {
-        note.textContent = "Thank you — your message has been received. I'll be in touch within 1-2 business days.";
-        note.style.display = 'block';
-      }
-      form.reset();
-    });
-  }
 });
