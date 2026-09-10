@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', function () {
           showNote("Thank you — your message has been received. I'll be in touch within 1-2 business days.", false);
           form.reset();
         } else {
-          showNote('Something went wrong sending your message — please email hello@wellbeyondnow.com directly.', true);
+          showNote('Something went wrong sending your message — please email jenna4134@gmail.com directly.', true);
         }
       })
       .catch(function () {
-        showNote('Something went wrong sending your message — please email hello@wellbeyondnow.com directly.', true);
+        showNote('Something went wrong sending your message — please email jenna4134@gmail.com directly.', true);
       })
       .finally(function () {
         if (submitBtn) {
