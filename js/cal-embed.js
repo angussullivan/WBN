@@ -1,6 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
   var bookButtons = document.querySelectorAll('[data-cal-event]');
-  if (!bookButtons.length || !CAL_USERNAME) return;
+  if (!bookButtons.length) return;
+
+  // Track click intent regardless of whether Cal.com itself is configured yet.
+  bookButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      window.wbnTrackConversion('bookCallClick');
+    });
+  });
+
+  if (!CAL_USERNAME) return;
 
   var configured = Array.prototype.filter.call(bookButtons, function (btn) {
     return !!CAL_EVENTS[btn.getAttribute('data-cal-event')];

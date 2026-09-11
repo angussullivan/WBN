@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (result.success) {
           showNote("Thank you — your message has been received. I'll be in touch within 1-2 business days.", false);
           form.reset();
+          window.wbnTrackConversion('contactFormSubmit');
         } else {
           showNote('Something went wrong sending your message — please email jenna4134@gmail.com directly.', true);
         }

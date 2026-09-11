@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         statusEl.hidden = true;
         contentEl.innerHTML = data.html;
         contentEl.hidden = false;
+        if (urlToken) window.wbnTrackConversion('ebookPurchase');
       } else {
         statusEl.textContent = data.error || "Could not verify your access — please contact us.";
         try { localStorage.removeItem(storageKey); } catch (e) { /* ignore */ }
