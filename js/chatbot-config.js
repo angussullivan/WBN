@@ -6,4 +6,4 @@
  * its deployed URL below. Leave as null until then — the chat widget
  * stays hidden rather than pointing at a broken endpoint.
  */
-var CHATBOT_WORKER_URL = null; // e.g. "https://wbn-chatbot.yoursubdomain.workers.dev"
+var CHATBOT_WORKER_URL = "https://wbn-chatbot.angussullivan.workers.dev";
