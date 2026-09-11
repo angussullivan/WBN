@@ -623,10 +623,9 @@ section {
   position: fixed;
   bottom: 96px;
   right: 24px;
-  width: 340px;
+  width: 380px;
   max-width: calc(100vw - 32px);
-  height: 480px;
-  max-height: calc(100vh - 140px);
+  height: min(760px, calc(100vh - 120px));
   background: var(--color-white);
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
@@ -798,6 +797,7 @@ section {
     right: 16px;
     left: 16px;
     width: auto;
+    height: calc(100vh - 96px);
   }
 
   .chat-toggle {
