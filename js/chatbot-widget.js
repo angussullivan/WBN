@@ -76,13 +76,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
   renderHistory();
 
+  function openPanel() {
+    panel.hidden = false;
+    toggle.setAttribute('aria-label', 'Close chat');
+    inputEl.focus();
+  }
+
+  function closePanel() {
+    panel.hidden = true;
+    toggle.setAttribute('aria-label', 'Open chat');
+  }
+
   toggle.addEventListener('click', function () {
-    panel.hidden = !panel.hidden;
-    if (!panel.hidden) inputEl.focus();
+    if (panel.hidden) {
+      openPanel();
+    } else {
+      closePanel();
+    }
   });
 
-  panel.querySelector('.chat-close').addEventListener('click', function () {
-    panel.hidden = true;
+  panel.querySelector('.chat-close').addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !panel.hidden) closePanel();
   });
 
   formEl.addEventListener('submit', function (e) {
