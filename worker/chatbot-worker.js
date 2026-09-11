@@ -282,9 +282,11 @@ async function sendAccessEmail(email, book, token, idempotencyKey, env) {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
       'Idempotency-Key': idempotencyKey,
+      'User-Agent': 'well-beyond-now-worker/1.0',
     },
     body: JSON.stringify({
       from: env.ACCESS_EMAIL_FROM,
+      reply_to: env.ACCESS_EMAIL_REPLY_TO || undefined,
       to: [email],
       subject: `Your ${title} access link`,
       html: `<p>Thank you for your purchase.</p><p><a href="${link}">Open ${title}</a></p><p>This private link provides lifetime access and can be opened on your other devices. Please keep it safe.</p>`,
