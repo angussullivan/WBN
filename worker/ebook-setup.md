@@ -65,6 +65,8 @@ being deliberately invalidated and reissued.
 3. Add it as an encrypted Worker secret named `RESEND_API_KEY`.
 4. Add a Worker variable named `ACCESS_EMAIL_FROM`, for example:
    `Well Beyond Now <access@wellbeyondnow.com.au>`.
+5. Add `ACCESS_EMAIL_REPLY_TO` as a plain Worker variable when replies should go
+   to a different monitored inbox, for example: `jenna4134@gmail.com`.
 
 The Worker stores only a one-way hash of the purchase email for recovery. It
 uses the raw email transiently when Stripe supplies it or when the customer
