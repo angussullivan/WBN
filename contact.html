@@ -102,8 +102,13 @@
               <label for="message">Your Message</label>
               <textarea id="message" name="message" required placeholder="Tell me a little about where you are and how I can help..."></textarea>
             </div>
+            <div class="form-consent">
+              <input type="checkbox" id="privacy-consent" name="privacy_consent" value="Agreed" required>
+              <label for="privacy-consent">I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and consent to my enquiry, including any health information I choose to provide, being processed as described.</label>
+            </div>
+            <div class="form-captcha" data-hcaptcha></div>
             <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-            <p class="form-note" style="display:none;margin-top:16px;color:var(--color-rose-dark);font-weight:600;"></p>
+            <p class="form-note" aria-live="polite" style="display:none;margin-top:16px;color:var(--color-rose-dark);font-weight:600;"></p>
           </form>
         </div>
 
@@ -167,6 +172,7 @@
 <script src="js/cal-config.js"></script>
 <script src="js/cal-embed.js"></script>
 <script src="js/contact-config.js"></script>
+<script src="js/hcaptcha-loader.js"></script>
 <script src="js/contact-form.js"></script>
 <script src="js/google-ads-config.js"></script>
 <script src="js/google-ads.js"></script>
