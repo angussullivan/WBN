@@ -1,95 +1,135 @@
-# Setting up gated e-book access
+# Setting up secure, lifetime e-book access
 
-This locks each e-book/program's reading page so it only works for
-someone who actually paid for that specific title, using the same
-Cloudflare Worker as the chatbot. No new Worker, no new account —
-just one new secret and some entries in the KV store you already set up.
+The Cloudflare Worker verifies what Stripe says was purchased, creates one
+deterministic lifetime entitlement per Checkout Session, emails the private
+access link through Resend, and lets a purchaser recover that link on another
+device using the checkout email address.
 
-**Important limitation, please read first:** this stops casual sharing
-(someone can't just forward the URL to a friend for free) but it is
-not unbreakable copy protection — nothing on the web is. A determined
-person could still screenshot or copy-paste the page after unlocking
-it. Treat this as "reasonable protection for a $30-100 digital
-product," not a vault.
+The `book` URL parameter used by the earlier implementation has been removed.
+The browser is never trusted to select an entitlement.
 
-## How it works
+## Security model and limitation
 
-1. Someone buys an e-book via its Stripe Buy Button.
-2. Stripe redirects their browser to your Worker's `/unlock` endpoint
-   with the Checkout Session ID.
-3. The Worker asks Stripe's API to confirm that session was actually
-   paid (using your Stripe secret key, kept server-side).
-4. If it checks out, the Worker creates a random access token, stores
-   it, and redirects the buyer to the matching page under `/read/`
-   with that token in the URL.
-5. That reading page calls the Worker to fetch the real content —
-   only if the token is valid for that specific book. The content
-   never sits in the page's HTML, so "view source" shows nothing
-   before unlocking.
-6. The token is also saved in the buyer's browser (localStorage), so
-   they can come back later without needing the original link again
-   (on that same browser/device).
+The Worker maps a verified Stripe Price ID to one internal book key. A paid
+session for one title cannot unlock another title, and replaying the same
+session returns the same access token instead of minting more tokens.
 
-## 1. Add your Stripe secret key to the Worker
+The emailed link is a bearer credential: anyone who receives it can open the
+book. This is practical lifetime, multi-device access for a low-cost digital
+product, not DRM. Customers should be told not to share the link.
 
-This is different from the publishable key already in the site, and
-different from the Anthropic key already on this Worker — it must
-never appear in any file or in chat.
+## 1. Configure Stripe Price IDs
 
-1. Get it from Stripe Dashboard → Developers → API keys → **Secret key**.
-2. Go to your `wbn-chatbot` Worker → **Settings** → **Variables and Secrets**.
-3. **Add** → type **Secret** (not plain Variable — same mistake to avoid as last time).
-4. Name: `STRIPE_SECRET_KEY`
-5. Value: paste directly into Cloudflare's field. Save.
+Create one Stripe Product and Price for each title. In the Worker's **Settings →
+Variables and Secrets**, add these plain variables using the real `price_...`
+IDs from the same Stripe mode as the key:
 
-## 2. Redeploy the Worker with the updated code
-
-Paste the full contents of `worker/chatbot-worker.js` (this file now
-handles the chatbot, `/unlock`, and `/content` all in one) into your
-Worker's **Edit code** view, replacing what's there, and deploy.
-
-## 3. Configure each e-book's after-payment redirect in Stripe
-
-For each of the three Payment Links / Buy Buttons (once you've
-created them — see the earlier Stripe setup notes for product names
-and prices):
-
-1. Open the Payment Link in Stripe Dashboard → find **After payment**.
-2. Choose **Don't show confirmation page** → redirect customers to your website.
-3. Set the redirect URL to:
-
-| Book | Redirect URL |
+| Worker variable | Stripe product |
 |---|---|
-| Birth Ready | `https://wbn-chatbot.angussullivan.workers.dev/unlock?book=birthReadyEbook&session_id={CHECKOUT_SESSION_ID}` |
-| The Fourth Trimester Reset | `https://wbn-chatbot.angussullivan.workers.dev/unlock?book=fourthTrimesterReset&session_id={CHECKOUT_SESSION_ID}` |
-| Cycle & Fertility Foundations | `https://wbn-chatbot.angussullivan.workers.dev/unlock?book=cycleFertilityBundle&session_id={CHECKOUT_SESSION_ID}` |
+| `STRIPE_PRICE_BIRTH_READY` | Birth Ready |
+| `STRIPE_PRICE_FOURTH_TRIMESTER` | The Fourth Trimester Reset |
+| `STRIPE_PRICE_CYCLE_FERTILITY` | Cycle & Fertility Foundations |
 
-`{CHECKOUT_SESSION_ID}` is a literal placeholder — type it exactly
-like that, Stripe fills in the real value automatically.
+Do not reuse a Price ID across books. Keep separate test and live Worker
+environments so test and production values cannot be mixed.
 
-## 4. Add the actual content
+## 2. Add a restricted Stripe key
 
-The content for each book lives in the same KV namespace you created
-for rate limiting (`wbn-chat-ratelimit`), just under different keys —
-no new namespace needed.
+Create a Stripe restricted API key with read-only access to Checkout Sessions.
+Add it to the Worker as an encrypted secret named:
 
-1. Go to Storage & databases → KV → `wbn-chat-ratelimit` → **KV Pairs**.
-2. Add an entry:
-   - Key: `content:birthReadyEbook` (exact key names below)
-   - Value: the e-book's content as HTML (headings, paragraphs — e.g. `<h2>Chapter One</h2><p>...</p>`)
-3. Repeat for the other two:
-   - `content:fourthTrimesterReset`
-   - `content:cycleFertilityBundle`
+```text
+STRIPE_RESTRICTED_KEY
+```
 
-Until a `content:` key exists for a book, its reading page will show
-"this content isn't available yet" to anyone who unlocks it — so
-nothing breaks if you set up payments before you've finished writing.
+Use a restricted `rk_` key rather than a general `sk_` secret. Apply Stripe key
+IP restrictions if they are compatible with the Worker deployment. Never place
+either key in this repository or a client-side file.
 
-## Testing it
+## 3. Add the access-token secret
 
-Once content + redirect are set up for at least one book, make a real
-test purchase (or a Stripe test-mode payment if the Buy Button is
-still in test mode) and confirm you land on the reading page with the
-content visible. Then open the reading page's URL directly with no
-token — it should show the "please purchase" message instead of the
-content.
+Generate at least 32 random bytes and store the value as an encrypted Worker
+secret named:
+
+```text
+ACCESS_TOKEN_SECRET
+```
+
+Do not change this value after sales begin unless all existing access links are
+being deliberately invalidated and reissued.
+
+## 4. Configure Resend
+
+1. Add and verify the sending domain in Resend.
+2. Create a Resend API key restricted to sending email.
+3. Add it as an encrypted Worker secret named `RESEND_API_KEY`.
+4. Add a Worker variable named `ACCESS_EMAIL_FROM`, for example:
+   `Well Beyond Now <access@wellbeyondnow.com.au>`.
+5. Add `ACCESS_EMAIL_REPLY_TO` as a plain Worker variable when replies should go
+   to a different monitored inbox, for example: `jenna4134@gmail.com`.
+
+The Worker stores only a one-way hash of the purchase email for recovery. It
+uses the raw email transiently when Stripe supplies it or when the customer
+submits the recovery form.
+
+## 5. Configure the Stripe webhook
+
+Create a Stripe webhook endpoint pointing to:
+
+```text
+https://wbn-chatbot.angussullivan.workers.dev/stripe-webhook
+```
+
+Subscribe only to:
+
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
+
+Store the webhook signing secret as the encrypted Worker secret:
+
+```text
+STRIPE_WEBHOOK_SECRET
+```
+
+The Worker verifies the signature and rejects events more than five minutes
+old. A delivery failure returns HTTP 500 so Stripe retries it.
+
+## 6. Configure Payment Link redirects
+
+For every Payment Link / Buy Button, set the after-payment redirect to exactly:
+
+```text
+https://wbn-chatbot.angussullivan.workers.dev/unlock?session_id={CHECKOUT_SESSION_ID}
+```
+
+Do not add a `book` parameter. The Worker retrieves the Checkout Session and
+line items from Stripe and derives the book from the verified Price ID.
+
+## 7. Add the actual content
+
+Add these HTML values to the KV namespace bound as `RATE_LIMIT_KV`:
+
+- `content:birthReadyEbook`
+- `content:fourthTrimesterReset`
+- `content:cycleFertilityBundle`
+
+Do not enable a live Buy Button until its matching content exists and a complete
+test purchase has succeeded.
+
+## 8. Test before going live
+
+For each title, test that:
+
+1. A successful checkout redirects to the correct reading page.
+2. The access email arrives and opens on a second browser/device.
+3. The recovery form resends the same working link.
+4. Replaying the same Checkout Session yields the same token.
+5. A session for one Price ID cannot open another title.
+6. Invalid and unpaid sessions are rejected.
+7. Invalid webhook signatures are rejected.
+
+Run the repository tests locally with:
+
+```text
+node --test worker/chatbot-worker.test.js
+```

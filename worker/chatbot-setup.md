@@ -29,9 +29,9 @@ Go to `dash.cloudflare.com` and sign up for free.
 4. Value: your Anthropic API key (starts with `sk-ant-...`) — get one from `console.anthropic.com` if you don't have one yet, under **API Keys**.
 5. Save.
 
-## 5. (Recommended) Add rate-limiting protection
+## 5. Add the required KV binding
 
-This caps how many messages one visitor can send per minute, so the endpoint can't be abused to run up your bill.
+This stores paid-content entitlements and also caps how many messages one visitor can send per minute.
 
 1. In the dashboard sidebar, go to **Storage & Databases** -> **KV**.
 2. Click **Create namespace**, name it `wbn-chat-ratelimit`, create it.
@@ -40,7 +40,7 @@ This caps how many messages one visitor can send per minute, so the endpoint can
 5. Select the `wbn-chat-ratelimit` namespace you just created.
 6. Save.
 
-If you skip this step, the chatbot still works — it just has no rate limiting, which is fine to start with on low traffic but worth adding before the site gets busy.
+This binding is required for paid-content access. Do not skip it.
 
 ## 6. Grab the Worker's URL
 

@@ -53,7 +53,7 @@
         <li><strong>Chat widget:</strong> the messages you send are processed to generate a reply about our services, pricing and booking. Conversations are kept only in your browser for the length of your visit — we don't store a transcript on our own servers. If you use the "leave your email" option in the chat, that name/email/question is sent to us the same way as the contact form.</li>
         <li><strong>Bookings:</strong> if you book a call or session, your name, email and appointment details are collected to schedule and confirm it.</li>
         <li><strong>Purchases:</strong> if you buy an e-book or program, payment is handled entirely by Stripe — we never see or store your card details. Stripe shares with us that a payment was made, for whom, and for what.</li>
-        <li><strong>E-book access:</strong> after a purchase, we store a randomly generated access token (not your name or email) that unlocks the content you bought. This token may also be saved in your browser's local storage so you don't need to re-enter it on return visits.</li>
+        <li><strong>E-book access:</strong> after a purchase, we create a private access token for the title you bought and email the access link to the address used at checkout. We store the token, the Stripe Checkout Session reference and a one-way hash of your email so you can request the same link on another device. We do not store your raw email in the access database. The token may also be saved in your browser's local storage so you don't need to re-enter it on return visits.</li>
         <li><strong>Basic technical data:</strong> our hosting and infrastructure providers (see below) automatically log standard technical information like IP address and browser type, as most websites do, for security and reliability purposes.</li>
       </ul>
 
@@ -63,6 +63,7 @@
         <li><strong>Stripe</strong> — payment processing</li>
         <li><strong>Cal.com</strong> — appointment scheduling (syncs with our calendar)</li>
         <li><strong>Web3Forms</strong> — delivers contact form and chat lead-capture submissions to our inbox by email</li>
+        <li><strong>Resend</strong> — sends purchase access and access-recovery emails</li>
         <li><strong>Anthropic</strong> — processes chat messages to generate the chatbot's replies</li>
         <li><strong>Cloudflare</strong> — hosts the backend that powers the chatbot and e-book access system</li>
         <li><strong>GitHub Pages</strong> — hosts the website itself</li>
