@@ -472,6 +472,37 @@ section {
   box-shadow: var(--shadow-soft);
 }
 
+.form-consent,
+.chat-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 18px;
+  text-align: left;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.form-consent input,
+.chat-consent input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.form-consent a,
+.chat-consent a {
+  text-decoration: underline;
+}
+
+.form-captcha,
+.chat-captcha {
+  min-height: 78px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
 /* Footer ---------------------------------------------------------- */
 
 .site-footer {
@@ -783,6 +814,27 @@ section {
 .chat-lead-form textarea {
   min-height: 60px;
   resize: vertical;
+}
+
+.chat-lead-form > label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-plum);
+}
+
+.chat-lead-form .botcheck {
+  display: none;
+}
+
+.chat-consent {
+  margin: 4px 0;
+  font-size: 0.78rem;
+}
+
+.chat-captcha {
+  transform: scale(0.9);
+  transform-origin: left top;
+  margin-bottom: 0;
 }
 
 .chat-lead-note {
