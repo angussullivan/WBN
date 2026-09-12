@@ -24,4 +24,8 @@
     <loc>https://wellbeyondnow.com.au/privacy.html</loc>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://wellbeyondnow.com.au/terms.html</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>

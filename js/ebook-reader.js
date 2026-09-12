@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (typeof CHATBOT_WORKER_URL === 'undefined' || !CHATBOT_WORKER_URL) {
-    statusEl.textContent = "This page isn't fully set up yet — please contact hello@wellbeyondnow.com.";
+    statusEl.textContent = "This page isn't fully set up yet — please contact jenna4134@gmail.com.";
     return;
   }
 

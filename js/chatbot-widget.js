@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
   leadForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (typeof WEB3FORMS_ACCESS_KEY === 'undefined' || !WEB3FORMS_ACCESS_KEY) {
-      leadNote.textContent = 'Please email hello@wellbeyondnow.com directly for now.';
+      leadNote.textContent = 'Please email jenna4134@gmail.com directly for now.';
       leadNote.style.display = 'block';
       return;
     }
