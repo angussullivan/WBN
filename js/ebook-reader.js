@@ -7,6 +7,78 @@ document.addEventListener('DOMContentLoaded', function () {
   var statusEl = document.getElementById('ebook-status');
   var contentEl = document.getElementById('ebook-content');
 
+  var allowedTags = new Set([
+    'A', 'BLOCKQUOTE', 'BR', 'CAPTION', 'CODE', 'DIV', 'EM', 'FIGCAPTION',
+    'FIGURE', 'H1', 'H2', 'H3', 'H4', 'H5', 'HR', 'IMG', 'LI', 'OL', 'P',
+    'PRE', 'SECTION', 'SPAN', 'STRONG', 'TABLE', 'TBODY', 'TD', 'TFOOT',
+    'TH', 'THEAD', 'TR', 'UL'
+  ]);
+  var discardTags = new Set([
+    'EMBED', 'FORM', 'IFRAME', 'MATH', 'OBJECT', 'SCRIPT', 'STYLE', 'SVG',
+    'TEMPLATE'
+  ]);
+
+  function safeUrl(value, isImage) {
+    var trimmed = String(value || '').trim();
+    if (!trimmed) return null;
+    if (isImage && /^data:image\/(?:png|jpe?g|gif|webp);base64,[a-z0-9+/=\s]+$/i.test(trimmed)) return trimmed;
+    try {
+      var parsed = new URL(trimmed, window.location.href);
+      var allowedProtocols = isImage ? ['http:', 'https:'] : ['http:', 'https:', 'mailto:'];
+      return allowedProtocols.indexOf(parsed.protocol) !== -1 ? parsed.href : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function copySafeNode(node, destination) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      destination.appendChild(document.createTextNode(node.textContent));
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE || discardTags.has(node.tagName)) return;
+
+    if (!allowedTags.has(node.tagName)) {
+      Array.from(node.childNodes).forEach(function (child) { copySafeNode(child, destination); });
+      return;
+    }
+
+    var clean = document.createElement(node.tagName.toLowerCase());
+    if (node.hasAttribute('class')) {
+      var classes = node.getAttribute('class').split(/\s+/).filter(function (name) {
+        return /^[a-z0-9_-]{1,40}$/i.test(name);
+      });
+      if (classes.length) clean.className = classes.join(' ');
+    }
+    ['title', 'alt'].forEach(function (name) {
+      if (node.hasAttribute(name)) clean.setAttribute(name, node.getAttribute(name).slice(0, 500));
+    });
+    ['colspan', 'rowspan'].forEach(function (name) {
+      var value = node.getAttribute(name);
+      if (/^[1-9]\d?$/.test(value || '')) clean.setAttribute(name, value);
+    });
+    if (node.tagName === 'A') {
+      var href = safeUrl(node.getAttribute('href'), false);
+      if (href) clean.setAttribute('href', href);
+      clean.setAttribute('rel', 'noopener noreferrer');
+    }
+    if (node.tagName === 'IMG') {
+      var src = safeUrl(node.getAttribute('src'), true);
+      if (src) clean.setAttribute('src', src);
+      clean.setAttribute('loading', 'lazy');
+      clean.setAttribute('decoding', 'async');
+    }
+    Array.from(node.childNodes).forEach(function (child) { copySafeNode(child, clean); });
+    destination.appendChild(clean);
+  }
+
+  function renderSafeHtml(html) {
+    var parsed = new DOMParser().parseFromString(String(html), 'text/html');
+    var fragment = document.createDocumentFragment();
+    Array.from(parsed.body.childNodes).forEach(function (node) { copySafeNode(node, fragment); });
+    contentEl.replaceChildren(fragment);
+  }
+
   function showRecovery() {
     if (document.getElementById('ebook-recovery')) return;
     var recovery = document.createElement('div');
@@ -87,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(function (data) {
       if (data.html) {
         statusEl.hidden = true;
-        contentEl.innerHTML = data.html;
+        renderSafeHtml(data.html);
         contentEl.hidden = false;
         if (urlToken) window.wbnTrackConversion('ebookPurchase');
       } else {

@@ -39,11 +39,17 @@ document.addEventListener('DOMContentLoaded', function () {
     '</form>' +
     '<div class="chat-lead-toggle"><button type="button">Prefer a personal reply? Leave your email</button></div>' +
     '<form class="chat-lead-form" hidden>' +
-      '<input type="text" name="name" placeholder="Your name" required>' +
-      '<input type="email" name="email" placeholder="Your email" required>' +
-      '<textarea name="message" placeholder="What would you like to ask?"></textarea>' +
+      '<input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<label for="chat-lead-name">Your name</label>' +
+      '<input id="chat-lead-name" type="text" name="name" placeholder="Your name" required>' +
+      '<label for="chat-lead-email">Your email</label>' +
+      '<input id="chat-lead-email" type="email" name="email" placeholder="Your email" required>' +
+      '<label for="chat-lead-message">Your message</label>' +
+      '<textarea id="chat-lead-message" name="message" placeholder="What would you like to ask?"></textarea>' +
+      '<div class="chat-consent"><input type="checkbox" id="chat-privacy-consent" name="privacy_consent" value="Agreed" required><label for="chat-privacy-consent">I agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</label></div>' +
+      '<div class="chat-captcha" data-hcaptcha></div>' +
       '<button type="submit" class="btn btn-primary btn-block">Send</button>' +
-      '<p class="chat-lead-note"></p>' +
+      '<p class="chat-lead-note" aria-live="polite"></p>' +
     '</form>';
 
   document.body.appendChild(toggle);
@@ -56,6 +62,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var leadToggleBtn = panel.querySelector('.chat-lead-toggle button');
   var leadForm = panel.querySelector('.chat-lead-form');
   var leadNote = leadForm.querySelector('.chat-lead-note');
+  var leadSubmitBtn = leadForm.querySelector('button[type="submit"]');
+  var leadCaptchaEl = leadForm.querySelector('[data-hcaptcha]');
+  var leadCaptchaWidgetId = null;
+  var captchaSiteKey = '50b2fe65-b00b-4b9e-ad62-3ba471098be2';
 
   function addMessageEl(role, text) {
     var el = document.createElement('div');
@@ -143,6 +153,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   leadToggleBtn.addEventListener('click', function () {
     leadForm.hidden = !leadForm.hidden;
+    if (!leadForm.hidden && leadCaptchaWidgetId === null && typeof window.wbnLoadHCaptcha === 'function') {
+      window.wbnLoadHCaptcha()
+        .then(function (hcaptcha) {
+          leadCaptchaWidgetId = hcaptcha.render(leadCaptchaEl, { sitekey: captchaSiteKey });
+        })
+        .catch(function () {
+          leadNote.textContent = 'The security check could not load. Please email jenna4134@gmail.com.';
+          leadNote.style.display = 'block';
+        });
+    }
   });
 
   leadForm.addEventListener('submit', function (e) {
@@ -154,8 +174,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var formData = new FormData(leadForm);
+    if (!formData.get('h-captcha-response')) {
+      leadNote.textContent = 'Please complete the security check before sending.';
+      leadNote.style.display = 'block';
+      return;
+    }
     formData.append('access_key', WEB3FORMS_ACCESS_KEY);
     formData.append('subject', 'Chatbot follow-up request from wellbeyondnow.com.au');
+
+    leadSubmitBtn.disabled = true;
+    leadSubmitBtn.textContent = 'Sending...';
 
     fetch('https://api.web3forms.com/submit', {
       method: 'POST',
@@ -166,13 +194,20 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (result) {
         leadNote.textContent = result.success
           ? "Thanks — I'll get back to you personally soon."
-          : 'Something went wrong — please email hello@wellbeyondnow.com directly.';
+          : 'Something went wrong — please email jenna4134@gmail.com directly.';
         leadNote.style.display = 'block';
-        if (result.success) leadForm.reset();
+        if (result.success) {
+          leadForm.reset();
+          if (window.hcaptcha && leadCaptchaWidgetId !== null) window.hcaptcha.reset(leadCaptchaWidgetId);
+        }
       })
       .catch(function () {
-        leadNote.textContent = 'Something went wrong — please email hello@wellbeyondnow.com directly.';
+        leadNote.textContent = 'Something went wrong — please email jenna4134@gmail.com directly.';
         leadNote.style.display = 'block';
+      })
+      .finally(function () {
+        leadSubmitBtn.disabled = false;
+        leadSubmitBtn.textContent = 'Send';
       });
   });
 });
