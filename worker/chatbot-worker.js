@@ -356,7 +356,7 @@ async function handleUnlock(request, env) {
     });
   } catch (err) {
     return new Response(
-      'We could not verify or deliver this purchase. Please contact hello@wellbeyondnow.com.',
+      'We could not verify or deliver this purchase. Please contact jenna4134@gmail.com.',
       { status: 402, headers: noStoreHeaders() }
     );
   }
